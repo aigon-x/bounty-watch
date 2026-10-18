@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Contact Bounty Watch – Get in touch with the team behind the bug bounty scope monitoring platform.">
+  <meta name="keywords" content="bug bounty, scope monitoring, contact, Bounty Watch">
+  <meta name="author" content="Bounty Watch Team">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#0066CC">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com;">
+  <link rel="canonical" href="https://abdulsalam-create.github.io/bounty-watch/contact.html">
+  <link rel="alternate" hreflang="en" href="https://abdulsalam-create.github.io/bounty-watch/contact.html">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Contact Us | Bounty Watch</title>
+  <style>
+    :root {
+      --color-primary: #0066CC;
+      --color-secondary: #004C99;
+      --color-accent: #FFCC00;
+      --color-background: #F5F7FA;
+      --color-text: #333333;
+      --color-muted: #777777;
+      --color-white: #FFFFFF;
+      --color-error: #DC2626;
+      --color-success: #16A34A;
+      --font-family: "Inter", sans-serif;
+      --container-max: 1200px;
+      --gutter: 24px;
+      --radius: 8px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+      --transition: 0.2s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: var(--font-family);
+      font-size: clamp(0.875rem, 0.875rem + 0vw, 1rem);
+      line-height: 1.6;
+      color: var(--color-text);
+      background-color: var(--color-background);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container { width: 100%; max-width: var(--container-max); margin: 0 auto; padding: 0 var(--gutter); }
+
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    /* Header */
+    .header { position: sticky; top: 0; z-index: 100; background: var(--color-white); border-bottom: 1px solid rgba(0,0,0,0.08); box-shadow: var(--shadow-sm); }
+
+    .header__inner { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: var(--gutter); }
+
+    .header__logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--color-text); font-weight: 700; font-size: clamp(1.125rem, 1rem + 0.5vw, 1.25rem); }
+
+    .header__logo svg { width: 32px; height: 32px; color: var(--color-primary); flex-shrink: 0; }
+
+    .header__nav { display: none; gap: 32px; }
+
+    .header__nav-link { color: var(--color-muted); text-decoration: none; font-weight: 500; font-size: 0.875rem; transition: color var(--transition); position: relative; padding: 4px 0; }
+
+    .header__nav-link:hover, .header__nav-link:focus { color: var(--color-primary); outline: none; }
+    .header__nav-link:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 4px; border-radius: 4px; }
+
+    .header__nav-link--active { color: var(--color-primary); }
+    .header__nav-link--active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--color-primary); border-radius: 2px; }
+
+    .header__cta { display: none; align-items: center; gap: 12px; }
+
+    .header__cta-link { color: var(--color-primary); text-decoration: none; font-weight: 600; font-size: 0.875rem; padding: 8px 16px; border: 1px solid var(--color-primary); border-radius: var(--radius); transition: all var(--transition); }
+
+    .header__cta-link:hover { background: var(--color-primary); color: var(--color-white); }
+    .header__cta-link:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+    .header__menu-btn { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: none; border: none; cursor: pointer; padding: 0; color: var(--color-text); }
+
+    .header__menu-btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; border-radius: var(--radius); }
+
+    @media (min-width: 768px) {
+      .header__nav { display: flex; }
+      .header__cta { display: flex; }
+      .header__menu-btn { display: none; }
+    }
+
+    /* Mobile Menu */
+    .mobile-menu { position: fixed; top: 64px; left: 0; right: 0; bottom: 0; background: var(--color-white); z-index: 99; padding: var(--gutter); display: flex; flex-direction: column; gap: 24px; transform: translateX(100%); transition: transform 0.3s ease; box-shadow: var(--shadow-lg); }
+
+    .mobile-menu--open { transform: translateX(0); }
+
+    .mobile-menu__link { display: block; padding: 16px 0; font-size: 1.125rem; font-weight: 500; color: var(--color-text); text-decoration: none; border-bottom: 1px solid rgba(0,0,0,0.08); }
+
+    .mobile-menu__link:hover { color: var(--color-primary); }
+
+    .mobile-menu__cta { display: inline-block; text-align: center; padding: 14px 24px; background: var(--color-primary); color: var(--color-white); font-weight: 600; text-decoration: none; border-radius: var(--radius); transition: background var(--transition); }
+
+    .mobile-menu__cta:hover { background: var(--color-accent); }
+  </style>
+</head>
+<body>
+  <a href="#main" class="visually-hidden">Skip to main content</a>
+
+  <header class="header" role="banner">
+    <div class="header__inner container">
+      <a href="/" class="header__logo" aria-label="Bounty Watch Home">
+        <!-- SVG logo placeholder -->
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect width="24" height="24" fill="currentColor"/></svg>
+        <span>Bounty Watch</span>
+      </a>
+
+      <nav class="header__nav" aria-label="Primary navigation">
+        <a href="/about.html" class="header__nav-link">About</a>
+        <a href="/services.html" class="header__nav-link">Services</a>
+        <a href="/contact.html" class="header__nav-link header__nav-link--active">Contact</a>
+      </nav>
+
+      <div class="header__cta">
+        <a href="/signup.html" class="header__cta-link">Sign Up</a>
+      </div>
+
+      <button class="header__menu-btn" aria-label="Open mobile menu" aria-controls="mobile-menu" aria-expanded="false">
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile navigation">
+    <a href="/about.html" class="mobile-menu__link">About</a>
+    <a href="/services.html" class="mobile-menu__link">Services</a>
+    <a href="/contact.html" class="mobile-menu__link">Contact</a>
+    <a href="/signup.html" class="mobile-menu__cta">Sign Up</a>
+  </nav>
+
+  <main id="main" class="container" role="main">
+    <h1>Contact Us</h1>
+    <p>Reach out to the Bounty Watch team for any inquiries or support.</p>
+    <!-- Contact form placeholder -->
+  </main>
+
+  <footer class="container" role="contentinfo">
+    <p>&copy; 2026 Bounty Watch Team. All rights reserved.</p>
+  </footer>
+
+  <script defer>
+    /**
+     * Toggles the mobile menu visibility.
+     * @param {Event} event - The click event from the menu button.
+     */
+    function toggleMobileMenu(event) {
+      /** @type {HTMLElement | null} */
+      const menu = document.getElementById('mobile-menu');
+      if (!menu) {
+        console.error('Mobile menu element not found.');
+        return;
+      }
+
+      const isOpen = menu.classList.toggle('mobile-menu--open');
+      const button = event.currentTarget;
+      button.setAttribute('aria-expanded', String(isOpen));
+
+      console.info(`Mobile menu ${isOpen ? 'opened' : 'closed'}.`);
+    }
+
+    /**
+     * Initializes event listeners for the mobile menu button.
+     */
+    function initMobileMenu() {
+      try {
+        const button = document.querySelector('.header__menu-btn');
+        if (!button) {
+          console.warn('Header menu button not found.');
+          return;
+        }
+        button.addEventListener('click', toggleMobileMenu);
+        console.debug('Mobile menu button initialized.');
+      } catch (err) {
+        console.error('Error initializing mobile menu:', err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+  </script>
+</body>
+</html>
