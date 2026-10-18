@@ -1,0 +1,203 @@
+/* assets/css/theme-dark.css */
+/* --------------------------------------------------------------
+   Dark‑mode overrides for the BountyWatch UI Kit
+   --------------------------------------------------------------
+   This file is deliberately lightweight – it only redefines colour
+   tokens and component‑specific colour usage. All layout, typography,
+   spacing and grid rules live in the core stylesheet(s).
+   -------------------------------------------------------------- */
+
+/* 1️⃣  Base colour tokens – dark theme
+   -------------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Core palette */
+    --color-primary:   #3399ff;   /* slightly lighter for contrast */
+    --color-secondary: #00e6b3;   /* brighter cyan */
+    --color-background: #121212; /* true dark background */
+    --color-surface:    #1e1e1e; /* cards, modals, etc. */
+    --color-text:       #e0e0e0; /* primary text */
+    --color-muted:      #777777; /* secondary/disabled text */
+    --color-border:     #333333; /* subtle borders */
+    --color-error:      #ff6b6b;
+    --color-warning:   #ffcc00;
+    --color-success:   #4cd964;
+
+    /* UI‑kit specific aliases (kept for backward compatibility) */
+    --bg-primary:   var(--color-primary);
+    --bg-secondary: var(--color-secondary);
+    --bg-page:      var(--color-background);
+    --bg-surface:   var(--color-surface);
+    --text-primary: var(--color-text);
+    --text-muted:   var(--color-muted);
+    --border-color: var(--color-border);
+  }
+}
+
+/* 2️⃣  Force dark mode via class (useful for manual toggles) */
+.dark-theme {
+  --color-primary:   #3399ff;
+  --color-secondary: #00e6b3;
+  --color-background: #121212;
+  --color-surface:    #1e1e1e;
+  --color-text:       #e0e0e0;
+  --color-muted:      #777777;
+  --color-border:     #333333;
+  --color-error:      #ff6b6b;
+  --color-warning:   #ffcc00;
+  --color-success:   #4cd964;
+
+  --bg-primary:   var(--color-primary);
+  --bg-secondary: var(--color-secondary);
+  --bg-page:      var(--color-background);
+  --bg-surface:   var(--color-surface);
+  --text-primary: var(--color-text);
+  --text-muted:   var(--color-muted);
+  --border-color: var(--color-border);
+}
+
+/* 3️⃣  Global resets for dark mode
+   -------------------------------------------------------------- */
+html,
+body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+}
+
+/* Ensure links are visible */
+a {
+  color: var(--color-primary);
+}
+a:hover,
+a:focus {
+  color: var(--color-secondary);
+}
+
+/* 4️⃣  Component‑specific overrides
+   -------------------------------------------------------------- */
+
+/* Header & Footer */
+header,
+footer {
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+/* ScopeCard – the main card component */
+.scope-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+}
+
+/* ProgramList – list items */
+.program-list__item {
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+.program-list__item:hover,
+.program-list__item:focus-within {
+  background-color: var(--bg-primary);
+  color: #fff;
+}
+
+/* AlertBanner – error / warning / success */
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
+.alert--error   { background: var(--color-error);   color: #fff; }
+.alert--warning { background: var(--color-warning); color: #212529; }
+.alert--success { background: var(--color-success); color: #fff; }
+
+/* Modal */
+.modal {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+.modal__header,
+.modal__footer {
+  border-color: var(--border-color);
+}
+
+/* Button – primary, secondary, outline, disabled */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;               /* ≥44px for accessibility */
+  min-width: 44px;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-family, 'Inter', sans-serif);
+  font-weight: 500;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+.button--primary {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+.button--primary:hover,
+.button--primary:focus {
+  background-color: #1a8cff; /* slightly darker on hover */
+}
+.button--secondary {
+  background-color: var(--color-secondary);
+  color: #212529;
+}
+.button--secondary:hover,
+.button--secondary:focus {
+  background-color: #00cfa1;
+}
+.button--outline {
+  background: transparent;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+}
+.button--outline:hover,
+.button--outline:focus {
+  background: var(--color-primary);
+  color: #fff;
+}
+.button:disabled,
+.button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 0.125rem;
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+/* 5️⃣  Utility classes (optional) */
+.bg-primary   { background-color: var(--bg-primary)   !important; }
+.bg-secondary { background-color: var(--bg-secondary) !important; }
+.bg-surface   { background-color: var(--bg-surface)   !important; }
+.text-primary { color: var(--text-primary) !important; }
+.text-muted   { color: var(--text-muted)   !important; }
+.border       { border: 1px solid var(--border-color) !important; }
+
+/* 6️⃣  Smooth transition for theme switch */
+html,
+body,
+header,
+footer,
+.scope-card,
+.modal,
+.button,
+.badge {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
