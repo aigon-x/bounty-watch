@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BountyWatch – Daily Scope Digest (2026‑10‑15)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Design system dependencies -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+        integrity="sha512-oHDEc8Xed6+g3V5K5fZ+ZcZcGZ+6YB6zF6tKcK5hZ6V4c5j5j4YQ5h5g5e5f5g5h"
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-xxxx"
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer" />
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+
+  <style>
+    :root {
+      --color-primary:   #0066FF;
+      --color-secondary: #00CC99;
+      --color-bg:        #F5F7FA;
+      --color-text:      #212529;
+      --color-error:     #DC3545;
+      --color-warning:   #FFC107;
+      --color-success:   #28A745;
+
+      --font-family: 'Inter', sans-serif;
+      --font-base: 16px;
+      --line-height: 1.5;
+
+      --h1-size: 2.5rem;
+      --h2-size: 2rem;
+      --h3-size: 1.75rem;
+      --h4-size: 1.5rem;
+      --h5-size: 1.25rem;
+      --h6-size: 1rem;
+
+      --container-max: 1200px;
+      --gutter: 24px;
+
+      --break-xs: 0;
+      --break-sm: 576px;
+      --break-md: 768px;
+      --break-lg: 992px;
+      --break-xl: 1200px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-family);
+      font-size: var(--font-base);
+      line-height: var(--line-height);
+      color: var(--color-text);
+      background: var(--color-bg);
+      margin: 0;
+    }
+
+    a { color: var(--color-primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    header {
+      background: var(--color-primary);
+      color: #fff;
+      padding: 0.75rem var(--gutter);
+    }
+    .logo { font-size: var(--h2-size); font-weight: 600; }
+
+    /* Navigation – mobile first */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: none;
+      flex-direction: column;
+    }
+    .nav-links li { margin: 0.5rem 0; }
+    .nav-links a { color: #fff; font-weight: 500; }
+
+    /* Hamburger */
+    #nav-toggle {
+      display: none;
+    }
+    label[for="nav-toggle"] {
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+    #nav-toggle:checked + .nav-links {
+      display: flex;
+    }
+
+    @media (min-width: var(--break-md)) {
+      .nav-links {
+        display: flex !important;
+        flex-direction: row;
+      }
+      .nav-links li { margin: 0 1rem; }
+      label[for="nav-toggle"] { display: none; }
+    }
+
+    main { max-width: var(--container-max); margin: 0 auto; padding: var(--gutter); }
+
+    .summary {
+      background: var(--color-secondary);
+      color: #fff;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 2rem;
+    }
+    .summary a { color: #fff; font-weight: 600; }
+
+    .grid {
+      display: grid;
+      gap: var(--gutter);
+    }
+    @media (min-width: var(--break-md)) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: var(--break-lg)) {
+      .grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .card h3 { margin-top: 0; font-size: var(--h3-size); }
+    .card .platform { font-size: 0.9rem; color: #555; margin-bottom: 0.5rem; }
+    .card ul { list-style: none; padding-left: 0; margin: 0; }
+    .card li { margin: 0.25rem 0; display: flex; align-items: center; }
+    .card li .fa { margin-right: 0.5rem; }
+    .card .added .fa { color: var(--color-success); }
+    .card .removed .fa { color: var(--color-error); }
+
+    footer {
+      background: #222;
+      color: #bbb;
+      text-align: center;
+      padding: 1rem var(--gutter);
+      margin-top: 2rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <div class="logo">BountyWatch</div>
+      <input type="checkbox" id="nav-toggle" />
+      <label for="nav-toggle"><i class="fa fa-bars"></i></label>
+      <ul class="nav-links">
+        <li><a href="https://abdulsalam-create.github.io/bounty-watch/scope.html">Dashboard</a></li>
+        <li><a href="#">Programs</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="summary">
+      <p><strong>3 scope change(s)</strong> across <strong>3 bug bounty program(s)</strong> since the last digest.</p>
+      <p>Dashboard: <a href="https://abdulsalam-create.github.io/bounty-watch/scope.html"
+                       target="_blank"
+                       rel="noopener">https://abdulsalam-create.github.io/bounty-watch/scope.html</a></p>
+    </section>
+
+    <section class="grid">
+      <!-- The Hut Group -->
+      <article class="card">
+        <h3>The Hut Group: Public Managed Bug Bounty Engagement</h3>
+        <p class="platform">Bugcrowd – <code>bc:hutgroup-public</code></p>
+        <p><a href="https://bugcrowd.com/engagements/hutgroup-public" target="_blank" rel="noopener">https://bugcrowd.com/engagements/hutgroup-public</a></p>
+        <ul>
+          <li class="removed"><i class="fa fa-minus"></i> scope removed:
+            <code>https://www.enjoyselfish.com</code>,
+            <code>https://www.illamasqua.com/</code>
+          </li>
+        </ul>
+      </article>
+
+      <!-- 1win -->
+      <article class="card">
+        <h3>1win</h3>
+        <p class="platform">HackerOne – <code>h1:1win_com</code></p>
+        <p><a href="https://hackerone.com/1win_com" target="_blank" rel="noopener">https://hackerone.com/1win_com</a></p>
+        <ul>
+          <li class="added"><i class="fa fa-plus"></i> scope added:
+            <code>1wintoken.com</code>,
+            <code>1wtoken.com</code>,
+            <code>https://solscan.io/account/B2RFzpckwjtHXHMrPMKarg6Cj6xkSdT6mru4gJiJE87L</code>,
+            <code>https://solscan.io/account/GWvQinGBRa7ZUzhXY23MrLjdsx3KfRGxH8yXURBwrz1R</code>,
+            <code>https://solscan.io/account/sxzuA7TuRvjVbrXkJUgrYq2hfjVf3RFd8WFaSxt2rYm</code>
+          </li>
+        </ul>
+      </article>
+
+      <!-- Expedia Group Bug Bounty -->
+      <article class="card">
+        <h3>Expedia Group Bug Bounty</h3>
+        <p class="platform">HackerOne – <code>h1:expediagroup_bbp</code></p>
+        <p><a href="https://hackerone.com/expediagroup_bbp" target="_blank" rel="noopener">https://hackerone.com/expediagroup_bbp</a></p>
+        <ul>
+          <li class="added"><i class="fa fa-plus"></i> scope added:
+            <code>*.expedia.biz</code>
+          </li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    © <span id="year"></span> BountyWatch – cc <a href="https://github.com/abdulsalam-create" target="_blank" rel="noopener">@abdulsalam-create</a>
+  </footer>
+
+  <script>
+    // Simple footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
