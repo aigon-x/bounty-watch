@@ -1,0 +1,28 @@
+<!-- Hero background – mobile‑first (served via srcset) -->
+<picture>
+  <!-- High‑DPI & larger‑width variants -->
+  <source
+    srcset="
+      assets/images/hero-mobile-320w.jpg   320w,
+      assets/images/hero-mobile-480w.jpg   480w,
+      assets/images/hero-mobile-640w.jpg   640w,
+      assets/images/hero-mobile-960w.jpg   960w,
+      assets/images/hero-mobile@2x.jpg    2x"
+    sizes="(max-width: 576px) 100vw, 100vw"
+    media="(max-width: 576px)" />
+
+  <!-- Fallback for browsers that don’t support <source> -->
+  <img
+    src="assets/images/hero-mobile.jpg"
+    srcset="
+      assets/images/hero-mobile-320w.jpg   320w,
+      assets/images/hero-mobile-480w.jpg   480w,
+      assets/images/hero-mobile-640w.jpg   640w,
+      assets/images/hero-mobile-960w.jpg   960w,
+      assets/images/hero-mobile@2x.jpg    2x"
+    sizes="100vw"
+    alt=""                     <!-- decorative image -->
+    loading="lazy"
+    decoding="async"
+    class="hero-image" />
+</picture>
