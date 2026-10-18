@@ -1,0 +1,64 @@
+# .github/workflows/security.yml
+# --------------------------------------------------------------
+# GitHub Actions workflow that runs the bounty‑watch job.
+# The job pulls a list of in‑scope targets from the workflow itself.
+# New in‑scope target added: PayPal – “Account restrictions and control bypasses – campaign”.
+# --------------------------------------------------------------
+
+name: Bounty Watch
+
+# Trigger the workflow on a daily schedule and manually.
+on:
+  schedule:
+    - cron: '0 0 * * *'   # every midnight UTC
+  workflow_dispatch:
+
+jobs:
+  bounty-watch:
+    name: Run bounty‑watch
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read   # only read access is required
+
+    # The list of in‑scope targets is embedded as a multiline
+    # environment variable.  The bounty‑watch CLI (or script) is
+    # expected to read this file and perform the scan.
+    env:
+      IN_SCOPE_TARGETS: |
+        - name: PayPal
+          url: https://hackerone.com/paypal
+          campaign: Account restrictions and control bypasses
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (if any)
+        run: |
+          # Example: install the bounty‑watch CLI if it is a Go binary
+          # go install github.com/abdulsalam-create/bounty-watch@latest
+          # If it is a script, ensure it is executable
+          chmod +x ./scripts/bounty-watch.sh
+
+      - name: Run bounty‑watch
+        run: |
+          # Write the in‑scope list to a file that the CLI expects.
+          echo "$IN_SCOPE_TARGETS" > in_scope.yml
+
+          # Execute the bounty‑watch tool.  Adjust the command line
+          # to match the actual binary or script name in this repo.
+          ./scripts/bounty-watch.sh --targets in_scope.yml
+        env:
+          # Pass the same env variable to the script for convenience
+          IN_SCOPE_TARGETS: ${{ env.IN_SCOPE_TARGETS }}
+
+      - name: Upload results
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bounty-watch-results
+          path: results/*.json
+
+# --------------------------------------------------------------
+# cc @abdulsalam-create
+# --------------------------------------------------------------
