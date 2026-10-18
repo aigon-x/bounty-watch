@@ -1,0 +1,117 @@
+#!/usr/bin/env python3
+"""
+Generate a production‑grade hero image for the desktop view.
+
+Output: assets/images/hero-desktop.jpg
+"""
+
+from __future__ import annotations
+
+import os
+import sys
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
+# ----------------------------------------------------------------------
+# Configuration (adjust to match the design system)
+# ----------------------------------------------------------------------
+OUTPUT_PATH = Path("assets/images/hero-desktop.jpg")
+WIDTH, HEIGHT = 1920, 1080                     # Desktop hero size
+PRIMARY_COLOR = (0, 102, 255)                  # #0066FF
+SECONDARY_COLOR = (0, 204, 153)                # #00CC99
+TEXT = "BountyWatch"
+FONT_URL = (
+    "https://github.com/google/fonts/raw/main/apache/inter/Inter-"
+    "Bold.ttf"
+)  # Fallback if local font missing
+FONT_PATH = Path("tmp/Inter-Bold.ttf")
+FONT_SIZE = 120
+TEXT_COLOR = (255, 255, 255)                  # #FFFFFF
+TEXT_PADDING = 80                              # px from left / top
+
+# ----------------------------------------------------------------------
+# Helpers
+# ----------------------------------------------------------------------
+def ensure_dir(path: Path) -> None:
+    """Create parent directories if they do not exist."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+
+def download_font(url: str, dest: Path) -> None:
+    """Download the font file if it is not already present."""
+    if dest.is_file():
+        return
+    import urllib.request
+
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        with urllib.request.urlopen(url) as resp, open(dest, "wb") as out:
+            out.write(resp.read())
+    except Exception as exc:
+        sys.stderr.write(f"⚠️  Failed to download font: {exc}\n")
+        sys.exit(1)
+
+
+def linear_gradient(size: tuple[int, int], start: tuple[int, int, int], end: tuple[int, int, int]) -> Image.Image:
+    """Create a left‑to‑right linear gradient."""
+    width, height = size
+    base = Image.new("RGB", size, start)
+    top = Image.new("RGB", size, end)
+    mask = Image.linear_gradient("L").resize((width, 1)).rotate(90, expand=True)
+    mask = mask.resize(size)
+    return Image.composite(top, base, mask)
+
+
+def add_centered_text(
+    img: Image.Image,
+    text: str,
+    font: ImageFont.FreeTypeFont,
+    color: tuple[int, int, int],
+    padding: int,
+) -> None:
+    """Draw text with left/top padding, respecting line‑breaks."""
+    draw = ImageDraw.Draw(img)
+    x, y = padding, padding
+    for line in text.split("\n"):
+        draw.text((x, y), line, font=font, fill=color)
+        y += font.getsize(line)[1] + int(0.2 * font.size)  # line spacing
+
+
+# ----------------------------------------------------------------------
+# Main generation routine
+# ----------------------------------------------------------------------
+def generate_hero() -> None:
+    # 1️⃣ Prepare output folder
+    ensure_dir(OUTPUT_PATH)
+
+    # 2️⃣ Ensure font is available
+    download_font(FONT_URL, FONT_PATH)
+
+    # 3️⃣ Create gradient background
+    hero = linear_gradient((WIDTH, HEIGHT), PRIMARY_COLOR, SECONDARY_COLOR)
+
+    # 4️⃣ Load font
+    try:
+        font = ImageFont.truetype(str(FONT_PATH), FONT_SIZE)
+    except Exception as exc:
+        sys.stderr.write(f"⚠️  Could not load font: {exc}\n")
+        sys.exit(1)
+
+    # 5️⃣ Render branding text
+    add_centered_text(hero, TEXT, font, TEXT_COLOR, TEXT_PADDING)
+
+    # 6️⃣ Save as high‑quality JPEG (quality=90, progressive)
+    hero.save(
+        OUTPUT_PATH,
+        format="JPEG",
+        quality=90,
+        progressive=True,
+        subsampling=0,  # 4:4:4 chroma for best quality
+        icc_profile=ImageCms.createProfile("sRGB") if "ImageCms" in globals() else None,
+    )
+    print(f"✅ Hero image generated at {OUTPUT_PATH}")
+
+
+if __name__ == "__main__":
+    generate_hero()
