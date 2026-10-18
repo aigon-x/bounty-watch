@@ -1,0 +1,425 @@
+// scripts/generate-hero-banner.js
+// Production-grade hero banner generator for desktop view
+// Output: assets/images/hero-desktop.jpg
+
+const { createCanvas, loadImage, registerFont } = require('canvas');
+const fs = require('fs');
+const path = require('path');
+
+// Configuration matching design system
+const CONFIG = {
+  width: 1920,
+  height: 1080,
+  dpi: 96,
+  quality: 90,
+  fontFamily: 'Inter',
+  colors: {
+    primary: '#0066CC',
+    secondary: '#004C99',
+    accent: '#FFCC00',
+    background: '#F5F7FA',
+    text: '#333333',
+    muted: '#777777',
+    cardBg: '#FFFFFF',
+    border: '#E1E5EB',
+    success: '#28A745',
+    danger: '#DC3545',
+    info: '#17A2B8'
+  },
+  spacing: {
+    xs: 8,
+    sm: 16,
+    md: 24,
+    lg: 32,
+    xl: 48
+  },
+  borderRadius: 12,
+  shadow: {
+    offsetX: 0,
+    offsetY: 4,
+    blur: 20,
+    color: 'rgba(0, 0, 0, 0.08)'
+  }
+};
+
+const CONTENT = {
+  title: 'Daily Scope Digest',
+  date: '2026-10-17',
+  summary: '4 scope change(s) across 2 bug bounty program(s) since the last digest.',
+  dashboardUrl: 'https://abdulsalam-create.github.io/bounty-watch/scope.html',
+  programs: [
+    {
+      name: 'Marriott Bug Bounty Program',
+      handle: 'h1:marriott',
+      url: 'https://hackerone.com/marriott',
+      changes: [
+        { type: 'added', scope: 'scope', target: 'uat.marriott.com' },
+        { type: 'removed', scope: 'scope', target: '*.sba.marriott.com' },
+        { type: 'removed', scope: 'out-of-scope', target: '*moxymix*.marriott.com, eswebdev.marriott.com' }
+      ]
+    },
+    {
+      name: 'MercadoLibre',
+      handle: 'h1:mercadolibre',
+      url: 'https://hackerone.com/mercadolibre',
+      changes: [
+        { type: 'added', scope: 'scope', target: '*.modoblack.mercadolivre.com.br, fullbarhomologa.modoblackfullbar.com.br, mercadolivreexperience.mercadolivre.com.br' }
+      ]
+    }
+  ],
+  footer: 'cc @abdulsalam-create'
+};
+
+async function generateHeroBanner() {
+  const canvas = createCanvas(CONFIG.width, CONFIG.height);
+  const ctx = canvas.getContext('2d');
+
+  // Enable high-quality rendering
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+
+  // Register fonts (assuming Inter is available locally)
+  try {
+    const fontDir = path.join(__dirname, '..', 'assets', 'fonts');
+    registerFont(path.join(fontDir, 'Inter-Regular.ttf'), { family: 'Inter', weight: 'normal' });
+    registerFont(path.join(fontDir, 'Inter-Medium.ttf'), { family: 'Inter', weight: '500' });
+    registerFont(path.join(fontDir, 'Inter-SemiBold.ttf'), { family: 'Inter', weight: '600' });
+    registerFont(path.join(fontDir, 'Inter-Bold.ttf'), { family: 'Inter', weight: '700' });
+  } catch (e) {
+    console.warn('Custom fonts not found, using system fallback');
+  }
+
+  // Draw background
+  drawBackground(ctx);
+
+  // Draw decorative elements
+  drawDecorativeElements(ctx);
+
+  // Draw main content
+  drawHeader(ctx);
+  drawSummary(ctx);
+  drawPrograms(ctx);
+  drawFooter(ctx);
+
+  // Save as high-quality JPEG
+  const outputDir = path.join(__dirname, '..', 'assets', 'images');
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+
+  const outputPath = path.join(outputDir, 'hero-desktop.jpg');
+  const buffer = canvas.toBuffer('image/jpeg', { quality: CONFIG.quality / 100 });
+  fs.writeFileSync(outputPath, buffer);
+
+  console.log(`✅ Hero banner generated: ${outputPath} (${CONFIG.width}x${CONFIG.height} @ ${CONFIG.quality}% quality)`);
+  return outputPath;
+}
+
+function drawBackground(ctx) {
+  // Base background
+  ctx.fillStyle = CONFIG.colors.background;
+  ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
+
+  // Subtle gradient overlay
+  const gradient = ctx.createLinearGradient(0, 0, 0, CONFIG.height);
+  gradient.addColorStop(0, 'rgba(0, 102, 204, 0.03)');
+  gradient.addColorStop(0.5, 'rgba(0, 102, 204, 0.01)');
+  gradient.addColorStop(1, 'rgba(0, 76, 153, 0.03)');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, CONFIG.width, CONFIG.height);
+
+  // Grid pattern (subtle)
+  drawGridPattern(ctx);
+}
+
+function drawGridPattern(ctx) {
+  ctx.strokeStyle = 'rgba(0, 102, 204, 0.02)';
+  ctx.lineWidth = 1;
+  const gridSize = 60;
+
+  for (let x = 0; x <= CONFIG.width; x += gridSize) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, CONFIG.height);
+    ctx.stroke();
+  }
+
+  for (let y = 0; y <= CONFIG.height; y += gridSize) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(CONFIG.width, y);
+    ctx.stroke();
+  }
+}
+
+function drawDecorativeElements(ctx) {
+  // Top accent bar
+  ctx.fillStyle = CONFIG.colors.primary;
+  ctx.fillRect(0, 0, CONFIG.width, 4);
+
+  // Accent line
+  ctx.fillStyle = CONFIG.colors.accent;
+  ctx.fillRect(CONFIG.spacing.xl, 4, 80, 3);
+
+  // Bottom accent bar
+  ctx.fillStyle = CONFIG.colors.primary;
+  ctx.fillRect(0, CONFIG.height - 4, CONFIG.width, 4);
+
+  // Corner decorative elements
+  drawCornerAccents(ctx);
+}
+
+function drawCornerAccents(ctx) {
+  const size = 120;
+  const offset = 40;
+
+  // Top-left
+  ctx.strokeStyle = 'rgba(0, 102, 204, 0.15)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(offset, offset + size);
+  ctx.lineTo(offset, offset);
+  ctx.lineTo(offset + size, offset);
+  ctx.stroke();
+
+  // Top-right
+  ctx.beginPath();
+  ctx.moveTo(CONFIG.width - offset - size, offset);
+  ctx.lineTo(CONFIG.width - offset, offset);
+  ctx.lineTo(CONFIG.width - offset, offset + size);
+  ctx.stroke();
+
+  // Bottom-left
+  ctx.beginPath();
+  ctx.moveTo(offset, CONFIG.height - offset - size);
+  ctx.lineTo(offset, CONFIG.height - offset);
+  ctx.lineTo(offset + size, CONFIG.height - offset);
+  ctx.stroke();
+
+  // Bottom-right
+  ctx.beginPath();
+  ctx.moveTo(CONFIG.width - offset - size, CONFIG.height - offset);
+  ctx.lineTo(CONFIG.width - offset, CONFIG.height - offset);
+  ctx.lineTo(CONFIG.width - offset, CONFIG.height - offset - size);
+  ctx.stroke();
+}
+
+function drawHeader(ctx) {
+  const startX = CONFIG.spacing.xl;
+  let currentY = CONFIG.spacing.xl + 60;
+
+  // Title
+  ctx.font = '700 48px Inter';
+  ctx.fillStyle = CONFIG.colors.text;
+  ctx.textBaseline = 'top';
+  ctx.fillText(CONTENT.title, startX, currentY);
+
+  currentY += 56;
+
+  // Date badge
+  ctx.font = '500 16px Inter';
+  ctx.fillStyle = CONFIG.colors.primary;
+  const dateText = `📅 ${CONTENT.date}`;
+  const dateWidth = ctx.measureText(dateText).width + 24;
+  const dateHeight = 32;
+
+  // Badge background
+  ctx.fillStyle = 'rgba(0, 102, 204, 0.1)';
+  roundRect(ctx, startX, currentY, dateWidth, dateHeight, 8);
+  ctx.fill();
+
+  // Badge text
+  ctx.fillStyle = CONFIG.colors.primary;
+  ctx.fillText(dateText, startX + 12, currentY + 8);
+
+  currentY += dateHeight + CONFIG.spacing.md;
+
+  // Summary
+  ctx.font = '400 22px Inter';
+  ctx.fillStyle = CONFIG.colors.muted;
+  ctx.fillText(CONTENT.summary, startX, currentY);
+
+  currentY += 36;
+
+  // Dashboard link
+  ctx.font = '500 16px Inter';
+  ctx.fillStyle = CONFIG.colors.primary;
+  const linkText = '🔗 View Dashboard →';
+  ctx.fillText(linkText, startX, currentY);
+
+  // Underline on hover simulation
+  const linkWidth = ctx.measureText(linkText).width;
+  ctx.strokeStyle = CONFIG.colors.primary;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(startX, currentY + 26);
+  ctx.lineTo(startX + linkWidth, currentY + 26);
+  ctx.stroke();
+
+  return currentY + 40;
+}
+
+function drawSummary(ctx) {
+  // This is handled in drawHeader
+}
+
+function drawPrograms(ctx) {
+  const startX = CONFIG.spacing.xl;
+  const startY = 280;
+  const cardWidth = (CONFIG.width - CONFIG.spacing.xl * 3) / 2;
+  const cardHeight = 420;
+
+  CONTENT.programs.forEach((program, index) => {
+    const x = startX + index * (cardWidth + CONFIG.spacing.xl);
+    const y = startY;
+
+    drawProgramCard(ctx, program, x, y, cardWidth, cardHeight);
+  });
+}
+
+function drawProgramCard(ctx, program, x, y, width, height) {
+  // Card background with shadow
+  ctx.shadowColor = CONFIG.shadow.color;
+  ctx.shadowOffsetX = CONFIG.shadow.offsetX;
+  ctx.shadowOffsetY = CONFIG.shadow.offsetY;
+  ctx.shadowBlur = CONFIG.shadow.blur;
+
+  ctx.fillStyle = CONFIG.colors.cardBg;
+  roundRect(ctx, x, y, width, height, CONFIG.borderRadius);
+  ctx.fill();
+
+  // Reset shadow
+  ctx.shadowColor = 'transparent';
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
+  ctx.shadowBlur = 0;
+
+  // Card border
+  ctx.strokeStyle = CONFIG.colors.border;
+  ctx.lineWidth = 1;
+  roundRect(ctx, x, y, width, height, CONFIG.borderRadius);
+  ctx.stroke();
+
+  // Top accent bar on card
+  ctx.fillStyle = CONFIG.colors.primary;
+  roundRectTop(ctx, x, y, width, 4, CONFIG.borderRadius);
+  ctx.fill();
+
+  let currentY = y + CONFIG.spacing.lg;
+  const contentX = x + CONFIG.spacing.lg;
+  const contentWidth = width - CONFIG.spacing.lg * 2;
+
+  // Program name
+  ctx.font = '700 22px Inter';
+  ctx.fillStyle = CONFIG.colors.text;
+  ctx.textBaseline = 'top';
+  wrapText(ctx, program.name, contentX, currentY, contentWidth, 30);
+  currentY += 36;
+
+  // Handle
+  ctx.font = '500 14px Inter';
+  ctx.fillStyle = CONFIG.colors.muted;
+  ctx.fillText(program.handle, contentX, currentY);
+  currentY += 28;
+
+  // URL
+  ctx.font = '400 13px Inter';
+  ctx.fillStyle = CONFIG.colors.primary;
+  ctx.fillText(program.url.replace('https://', ''), contentX, currentY);
+  currentY += CONFIG.spacing.lg;
+
+  // Divider
+  ctx.strokeStyle = CONFIG.colors.border;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(contentX, currentY);
+  ctx.lineTo(x + width - CONFIG.spacing.lg, currentY);
+  ctx.stroke();
+  currentY += CONFIG.spacing.md;
+
+  // Changes
+  program.changes.forEach((change, idx) => {
+    drawChangeItem(ctx, change, contentX, currentY, contentWidth);
+    currentY += 44;
+  });
+}
+
+function drawChangeItem(ctx, change, x, y, maxWidth) {
+  const iconSize = 20;
+  const padding = 12;
+  const badgeWidth = 100;
+
+  // Type badge
+  const badgeColors = {
+    added: { bg: 'rgba(40, 167, 69, 0.1)', text: CONFIG.colors.success, icon: '+' },
+    removed: { bg: 'rgba(220, 53, 69, 0.1)', text: CONFIG.colors.danger, icon: '−' }
+  };
+
+  const colors = badgeColors[change.type] || badgeColors.added;
+
+  // Badge background
+  ctx.fillStyle = colors.bg;
+  roundRect(ctx, x, y, badgeWidth, 28, 6);
+  ctx.fill();
+
+  // Badge icon + text
+  ctx.font = '600 13px Inter';
+  ctx.fillStyle = colors.text;
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`${colors.icon} ${change.type}`, x + 14, y + 14);
+
+  // Scope label
+  ctx.font = '500 12px Inter';
+  ctx.fillStyle = CONFIG.colors.muted;
+  ctx.fillText(change.scope.toUpperCase(), x + badgeWidth + 16, y + 14);
+
+  // Target
+  ctx.font = '400 13px Inter';
+  ctx.fillStyle = CONFIG.colors.text;
+  ctx.textBaseline = 'top';
+  wrapText(ctx, change.target, x, y + 32, maxWidth, 20);
+}
+
+function drawFooter(ctx) {
+  const y = CONFIG.height - CONFIG.spacing.xl - 30;
+  const x = CONFIG.spacing.xl;
+
+  // Divider line
+  ctx.strokeStyle = CONFIG.colors.border;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(x, y - 20);
+  ctx.lineTo(CONFIG.width - x, y - 20);
+  ctx.stroke();
+
+  // Footer text
+  ctx.font = '400 14px Inter';
+  ctx.fillStyle = CONFIG.colors.muted;
+  ctx.textBaseline = 'bottom';
+  ctx.fillText(CONTENT.footer, x, y);
+
+  // Right side - version/build info
+  ctx.textAlign = 'right';
+  ctx.fillText('Generated by BountyWatch • Modern Responsive UI Kit', CONFIG.width - x, y);
+  ctx.textAlign = 'left';
+}
+
+// Utility functions
+function roundRect(ctx, x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+function roundRectTop(ctx, x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius
