@@ -1,0 +1,407 @@
+/* assets/css/style.css ----------------------------------------------------
+   BountyWatch UI Kit – Production stylesheet
+   --------------------------------------------------------------- */
+
+/* ------------------------------------------------------------------
+   1. Design‑system variables
+   ------------------------------------------------------------------ */
+:root {
+  /* Colors */
+  --color-primary:   #0066FF;
+  --color-secondary: #00CC99;
+  --color-background:#F5F7FA;
+  --color-text:      #212529;
+  --color-error:     #DC3545;
+  --color-warning:   #FFC107;
+  --color-success:   #28A745;
+
+  /* Typography */
+  --font-family: 'Inter', sans-serif;
+  --font-size-base: 1rem;               /* 16px */
+  --line-height-base: 1.5;
+  --h1: 2.5rem;
+  --h2: 2rem;
+  --h3: 1.75rem;
+  --h4: 1.5rem;
+  --h5: 1.25rem;
+  --h6: 1rem;
+
+  /* Layout */
+  --container-max-width: 1200px;
+  --gutter: 24px;
+
+  /* Breakpoints (mobile‑first) */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+
+  /* Spacing scale (0‑5) */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 1rem;      /* 16px */
+  --space-4: 1.5rem;    /* 24px */
+  --space-5: 3rem;      /* 48px */
+
+  /* Z‑index */
+  --z-modal: 1000;
+  --z-dropdown: 900;
+}
+
+/* ------------------------------------------------------------------
+   2. Global resets & base styles
+   ------------------------------------------------------------------ */
+html {
+  box-sizing: border-box;
+  font-size: 100%;               /* 16px = 1rem */
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+  background-color: var(--color-background);
+}
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 var(--space-3) 0;
+  font-weight: 600;
+  line-height: 1.2;
+}
+h1 {font-size: var(--h1);}
+h2 {font-size: var(--h2);}
+h3 {font-size: var(--h3);}
+h4 {font-size: var(--h4);}
+h5 {font-size: var(--h5);}
+h6 {font-size: var(--h6);}
+p {margin: 0 0 var(--space-3) 0;}
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+a:hover,
+a:focus {text-decoration: underline;}
+ul, ol {margin: 0 0 var(--space-3) 1.5rem;}
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Focus outline – visible for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------
+   3. Layout – Container & Grid (Flexbox)
+   ------------------------------------------------------------------ */
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  padding-left: calc(var(--gutter) / 2);
+  padding-right: calc(var(--gutter) / 2);
+  margin-left: auto;
+  margin-right: auto;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: calc(-1 * var(--gutter) / 2);
+  margin-right: calc(-1 * var(--gutter) / 2);
+}
+.col {
+  flex: 1 0 0%;
+  padding-left: calc(var(--gutter) / 2);
+  padding-right: calc(var(--gutter) / 2);
+  min-width: 0;
+}
+
+/* 2‑column at md, 3‑column at lg */
+@media (min-width: var(--breakpoint-md)) {
+  .col-6 {flex: 0 0 50%; max-width: 50%;}
+}
+@media (min-width: var(--breakpoint-lg)) {
+  .col-4 {flex: 0 0 33.3333%; max-width: 33.3333%;}
+}
+
+/* ------------------------------------------------------------------
+   4. Utility classes
+   ------------------------------------------------------------------ */
+.u-m-0   {margin: var(--space-0) !important;}
+.u-m-1   {margin: var(--space-1) !important;}
+.u-m-2   {margin: var(--space-2) !important;}
+.u-m-3   {margin: var(--space-3) !important;}
+.u-m-4   {margin: var(--space-4) !important;}
+.u-m-5   {margin: var(--space-5) !important;}
+
+.u-p-0   {padding: var(--space-0) !important;}
+.u-p-1   {padding: var(--space-1) !important;}
+.u-p-2   {padding: var(--space-2) !important;}
+.u-p-3   {padding: var(--space-3) !important;}
+.u-p-4   {padding: var(--space-4) !important;}
+.u-p-5   {padding: var(--space-5) !important;}
+
+.u-text-center   {text-align: center !important;}
+.u-text-left     {text-align: left !important;}
+.u-text-right    {text-align: right !important;}
+
+.u-d-none   {display: none !important;}
+.u-d-block  {display: block !important;}
+.u-d-inline {display: inline !important;}
+.u-d-inline-block {display: inline-block !important;}
+
+/* Visibility helpers */
+@media (max-width: calc(var(--breakpoint-sm) - 1px)) {
+  .u-sm-up {display: none !important;}
+}
+@media (min-width: var(--breakpoint-sm)) {
+  .u-sm-down {display: none !important;}
+}
+
+/* ------------------------------------------------------------------
+   5. Components
+   ------------------------------------------------------------------ */
+
+/* 5.1 Header ------------------------------------------------------- */
+.header {
+  background-color: var(--color-primary);
+  color: #fff;
+  padding: var(--space-2) var(--space-3);
+}
+.header .logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.header nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.header nav a {
+  color: #fff;
+  font-weight: 500;
+}
+.header .nav-toggle {
+  display: none;
+  background: none;
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+/* Hamburger for <sm */
+@media (max-width: calc(var(--breakpoint-sm) - 1px)) {
+  .header nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-primary);
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .3s ease;
+  }
+  .header nav.open {
+    max-height: 400px; /* enough for links */
+  }
+  .header .nav-toggle {
+    display: block;
+  }
+}
+
+/* 5.2 Footer ------------------------------------------------------- */
+.footer {
+  background-color: #e9ecef;
+  color: var(--color-text);
+  padding: var(--space-4) var(--space-3);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* 5.3 Button ------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;               /* touch target */
+  min-width: 44px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: 4px;
+  font-weight: 500;
+  line-height: 1;
+  transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #0052cc;
+}
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: #fff;
+}
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background-color: #009977;
+}
+.btn-outline {
+  background: transparent;
+  border: 2px solid currentColor;
+}
+.btn-outline-primary {
+  color: var(--color-primary);
+}
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  background-color: rgba(0,102,255,.1);
+}
+
+/* 5.4 Badge -------------------------------------------------------- */
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.5em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 0.25rem;
+  line-height: 1;
+}
+.badge-primary   {background: var(--color-primary);   color: #fff;}
+.badge-secondary {background: var(--color-secondary); color: #fff;}
+.badge-success   {background: var(--color-success);   color: #fff;}
+.badge-warning   {background: var(--color-warning);   color: #212529;}
+.badge-error     {background: var(--color-error);     color: #fff;}
+
+/* 5.5 AlertBanner -------------------------------------------------- */
+.alert {
+  padding: var(--space-3);
+  border-radius: 4px;
+  margin-bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.alert .icon {font-size: 1.25rem;}
+.alert-primary   {background: rgba(0,102,255,.1); color: var(--color-primary);}
+.alert-secondary {background: rgba(0,204,153,.1); color: var(--color-secondary);}
+.alert-success   {background: rgba(40,165,69,.1); color: var(--color-success);}
+.alert-warning   {background: rgba(255,193,7,.1); color: var(--color-warning);}
+.alert-error     {background: rgba(220,53,69,.1); color: var(--color-error);}
+
+/* 5.6 Modal -------------------------------------------------------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal {
+  background: #fff;
+  border-radius: 6px;
+  max-width: 90%;
+  width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+.modal-header,
+.modal-footer {
+  padding: var(--space-3);
+  border-bottom: 1px solid #dee2e6;
+}
+.modal-header {border-bottom-width: 2px;}
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  border-bottom: none;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+.modal-body {padding: var(--space-3);}
+
+/* 5.7 ScopeCard ---------------------------------------------------- */
+.scope-card {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.scope-card__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+.scope-card__url {
+  font-family: monospace;
+  word-break: break-all;
+  color: var(--color-secondary);
+}
+.scope-card__status {
+  align-self: flex-start;
+  font-size: 0.875rem;
+}
+
+/* 5.8 ProgramList -------------------------------------------------- */
+.program-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.program-list__item {
+  padding: var(--space-3);
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.program-list__item:last-child {border-bottom: none;}
+.program-list__title {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* ------------------------------------------------------------------
+   6. Responsive helpers (optional)
+   ------------------------------------------------------------------ */
+@media (min-width: var(--breakpoint-sm)) {
+  .u-sm-text-center   {text-align: center !important;}
+}
+@media (min-width: var(--breakpoint-md)) {
+  .u-md-text-left     {text-align: left !important;}
+  .u-md-text-right    {text-align: right !important;}
+}
+@media (min-width: var(--breakpoint-lg)) {
+  .u-lg-d-flex {display: flex !important;}
+}
+
+/* ------------------------------------------------------------------
+   7. Print styles (basic)
+   ------------------------------------------------------------------ */
+@media print {
+  .header, .footer, .nav-toggle, .modal-backdrop {display: none;}
+  .container {max-width: none;}
+}
+
+/* ------------------------------------------------------------------
+   End of stylesheet
+   ------------------------------------------------------------------ */
