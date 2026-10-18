@@ -1,0 +1,181 @@
+/* ==========================================================================
+   Responsive Design System – Core Utilities
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1️⃣  Custom Properties – Breakpoints & Layout
+   -------------------------------------------------------------------------- */
+:root {
+  /* Breakpoint values – mobile‑first min‑width */
+  --bp-xs: 0;
+  --bp-sm: 576px;
+  --bp-md: 768px;
+  --bp-lg: 992px;
+  --bp-xl: 1200px;
+  --bp-xxl: 1400px;
+
+  /* Container */
+  --container-max: 1200px;
+  --container-gutter: 24px;
+  --container-padding: var(--container-gutter);
+
+  /* Fluid typography scale (clamp) */
+  --fs-fluid-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --fs-fluid-sm: clamp(0.875rem, 0.825rem + 0.25vw, 1rem);
+  --fs-fluid-base: clamp(1rem, 0.925rem + 0.375vw, 1.125rem);
+  --fs-fluid-lg: clamp(1.125rem, 1.025rem + 0.5vw, 1.25rem);
+  --fs-fluid-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+  --fs-fluid-2xl: clamp(1.5rem, 1.25rem + 1.25vw, 2rem);
+  --fs-fluid-3xl: clamp(1.75rem, 1.4rem + 1.75vw, 2.5rem);
+  --fs-fluid-4xl: clamp(2rem, 1.5rem + 2.5vw, 3rem);
+  --fs-fluid-5xl: clamp(2.5rem, 1.75rem + 3.75vw, 4rem);
+
+  /* Spacing scale */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  /* Responsive spacing (fluid) */
+  --space-fluid-xs: clamp(4px, 2px + 1vw, 8px);
+  --space-fluid-sm: clamp(8px, 4px + 2vw, 16px);
+  --space-fluid-md: clamp(16px, 8px + 4vw, 32px);
+  --space-fluid-lg: clamp(24px, 12px + 6vw, 48px);
+  --space-fluid-xl: clamp(32px, 16px + 8vw, 64px);
+  --space-fluid-2xl: clamp(48px, 24px + 12vw, 96px);
+
+  /* Display utilities */
+  --display-none: none;
+  --display-inline: inline;
+  --display-inline-block: inline-block;
+  --display-block: block;
+  --display-flex: flex;
+  --display-inline-flex: inline-flex;
+  --display-grid: grid;
+  --display-table: table;
+  --display-table-cell: table-cell;
+
+  /* Flex utilities */
+  --flex-row: row;
+  --flex-row-reverse: row-reverse;
+  --flex-column: column;
+  --flex-column-reverse: column-reverse;
+  --flex-wrap: wrap;
+  --flex-nowrap: nowrap;
+  --flex-wrap-reverse: wrap-reverse;
+
+  /* Grid utilities */
+  --grid-auto-flow: row;
+  --grid-auto-columns: minmax(0, 1fr);
+}
+
+/* --------------------------------------------------------------------------
+   2️⃣  Layered Organization – Base, Utilities, Components
+   -------------------------------------------------------------------------- */
+@layer base {
+  /* Box‑sizing and font‑smoothing */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: system-ui, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-size: var(--fs-fluid-base);
+    color: #111;
+    background-color: #fff;
+  }
+}
+
+@layer utilities {
+  /* ------------------------------------------------------------------------
+     2.1  Container Utilities
+     ------------------------------------------------------------------------ */
+  .container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  .container-fluid {
+    width: 100%;
+    padding-inline: var(--container-padding);
+  }
+
+  .container-narrow {
+    max-width: 800px;
+  }
+
+  .container-wide {
+    max-width: 1400px;
+  }
+
+  /* Breakpoint‑specific container widths */
+  @media (min-width: var(--bp-sm)) {
+    .container-sm { max-width: 540px; }
+  }
+  @media (min-width: var(--bp-md)) {
+    .container-md { max-width: 720px; }
+  }
+  @media (min-width: var(--bp-lg)) {
+    .container-lg { max-width: 960px; }
+  }
+  @media (min-width: var(--bp-xl)) {
+    .container-xl { max-width: 1140px; }
+  }
+  @media (min-width: var(--bp-xxl)) {
+    .container-xxl { max-width: 1320px; }
+  }
+
+  /* ------------------------------------------------------------------------
+     2.2  Display Utilities
+     ------------------------------------------------------------------------ */
+  .d-none { display: var(--display-none); }
+  .d-inline { display: var(--display-inline); }
+  .d-inline-block { display: var(--display-inline-block); }
+  .d-block { display: var(--display-block); }
+  .d-flex { display: var(--display-flex); }
+  .d-inline-flex { display: var(--display-inline-flex); }
+  .d-grid { display: var(--display-grid); }
+  .d-table { display: var(--display-table); }
+  .d-table-cell { display: var(--display-table-cell); }
+
+  /* Responsive display helpers – no !important */
+  @media (min-width: var(--bp-sm)) {
+    .d-sm-none { display: var(--display-none); }
+    .d-sm-inline { display: var(--display-inline); }
+    .d-sm-inline-block { display: var(--display-inline-block); }
+    .d-sm-block { display: var(--display-block); }
+    .d-sm-flex { display: var(--display-flex); }
+    .d-sm-inline-flex { display: var(--display-inline-flex); }
+    .d-sm-grid { display: var(--display-grid); }
+    .d-sm-table { display: var(--display-table); }
+    .d-sm-table-cell { display: var(--display-table-cell); }
+  }
+  @media (min-width: var(--bp-md)) {
+    .d-md-none { display: var(--display-none); }
+    .d-md-inline { display: var(--display-inline); }
+    .d-md-inline-block { display: var(--display-inline-block); }
+    .d-md-block { display: var(--display-block); }
+    .d-md-flex { display: var(--display-flex); }
+    .d-md-inline-flex { display: var(--display-inline-flex); }
+    .d-md-grid { display: var(--display-grid); }
+    .d-md-table { display: var(--display-table); }
+    .d-md-table-cell { display: var(--display-table-cell); }
+  }
+  @media (min-width: var(--bp-lg)) {
+    .d-lg-none { display: var(--display-none); }
