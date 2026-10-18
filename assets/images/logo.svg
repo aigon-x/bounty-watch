@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- assets/images/logo.svg -->
+<!-- Brand logo for BountyWatch – works as header logo and favicon -->
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="100"
+    height="100"
+    viewBox="0 0 100 100"
+    role="img"
+    aria-labelledby="title desc">
+
+  <title id="title">BountyWatch logo</title>
+  <desc id="desc">A stylised “B” formed by two overlapping circles with a watch‑hand motif, using the primary #0066FF and secondary #00CC99 colours.</desc>
+
+  <!-- Background (transparent for favicon, optional solid for header) -->
+  <rect width="100" height="100" fill="none"/>
+
+  <!-- Outer circle – primary colour -->
+  <circle cx="50" cy="50" r="45" fill="#0066FF"/>
+
+  <!-- Inner circle – secondary colour, offset to create a “B” shape -->
+  <path
+    d="
+      M 50,15
+      A 35,35 0 0 1 85,50
+      L 70,50
+      A 20,20 0 0 0 50,30
+      Z
+      M 50,55
+      A 35,35 0 0 1 85,90
+      L 70,90
+      A 20,20 0 0 0 50,70
+      Z"
+    fill="#00CC99"/>
+
+  <!-- Watch hand – white for contrast -->
+  <g transform="translate(50,50)">
+    <!-- Hour hand -->
+    <line x1="0" y1="0" x2="0" y2="-20"
+          stroke="#FFFFFF"
+          stroke-width="4"
+          stroke-linecap="round"/>
+    <!-- Minute hand -->
+    <line x1="0" y1="0" x2="12" y2="-12"
+          stroke="#FFFFFF"
+          stroke-width="2"
+          stroke-linecap="round"/>
+    <!-- Center dot -->
+    <circle cx="0" cy="0" r="2" fill="#FFFFFF"/>
+  </g>
+
+</svg>
