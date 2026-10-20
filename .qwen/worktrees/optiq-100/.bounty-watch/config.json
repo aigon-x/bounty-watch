@@ -1,0 +1,176 @@
+import json
+from typing import Dict, List, Optional, Union
+import logging
+from pydantic import BaseModel, HttpUrl, validator, ValidationError
+import sys
+
+# Configure logging with proper levels and format
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout)
+    ]
+)
+logger = logging.getLogger(__name__)
+
+class Program(BaseModel):
+    """Model representing a bug bounty program with comprehensive validation."""
+    name: str
+    url: HttpUrl
+    new_in_scope: List[str]
+    bounty: Optional[int] = None
+
+    @validator('name')
+    def validate_name(cls, v: str) -> str:
+        """Validate program name is not empty and meets length requirements."""
+        if not v.strip():
+            raise ValueError("Program name cannot be empty")
+        if len(v) > 100:
+            raise ValueError("Program name cannot exceed 100 characters")
+        return v.strip()
+
+    @validator('new_in_scope')
+    def validate_new_in_scope(cls, v: List[str]) -> List[str]:
+        """Validate new_in_scope list contains valid URLs or domains."""
+        if not v:
+            raise ValueError("new_in_scope list cannot be empty")
+        if len(v) > 50:
+            raise ValueError("new_in_scope list cannot exceed 50 items")
+
+        validated_items = []
+        for item in v:
+            if not item.strip():
+                raise ValueError("new_in_scope items cannot be empty")
+            if len(item) > 200:
+                raise ValueError("new_in_scope items cannot exceed 200 characters")
+
+            # Basic URL/domain validation
+            if not (item.startswith(('http://', 'https://')) or '.' in item):
+                raise ValueError(f"Invalid URL or domain format: {item}")
+
+            validated_items.append(item.strip())
+
+        return validated_items
+
+    @validator('bounty')
+    def validate_bounty(cls, v: Optional[int]) -> Optional[int]:
+        """Validate bounty amount if provided."""
+        if v is not None:
+            if v < 0:
+                raise ValueError("Bounty amount cannot be negative")
+            if v > 10000000:  # $10M cap
+                raise ValueError("Bounty amount exceeds maximum allowed value")
+        return v
+
+class ProgramsData(BaseModel):
+    """Model representing the entire programs data structure with validation."""
+    programs: Dict[str, Program]
+
+    @validator('programs')
+    def validate_programs(cls, v: Dict[str, Program]) -> Dict[str, Program]:
+        """Validate programs dictionary meets requirements."""
+        if not v:
+            raise ValueError("Programs dictionary cannot be empty")
+        if len(v) > 1000:
+            raise ValueError("Programs dictionary cannot exceed 1000 items")
+
+        # Check for duplicate program IDs
+        program_ids = list(v.keys())
+        if len(program_ids) != len(set(program_ids)):
+            raise ValueError("Duplicate program IDs found")
+
+        return v
+
+def load_programs_data(data: str) -> ProgramsData:
+    """Load and validate programs data from JSON string with comprehensive error handling.
+
+    Args:
+        data: JSON string containing programs data
+
+    Returns:
+        Validated ProgramsData object
+
+    Raises:
+        ValueError: If data is invalid
+        json.JSONDecodeError: If JSON is malformed
+        ValidationError: If data fails Pydantic validation
+    """
+    if not data.strip():
+        logger.error("Empty input data provided")
+        raise ValueError("Input data cannot be empty")
+
+    try:
+        parsed_data = json.loads(data)
+        return ProgramsData(**parsed_data)
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON data: {e}")
+        raise
+    except ValidationError as e:
+        logger.error(f"Data validation failed: {e}")
+        raise
+    except Exception as e:
+        logger.error(f"Unexpected error processing data: {e}")
+        raise ValueError(f"Failed to process programs data: {e}")
+
+def process_programs_data(data: str) -> ProgramsData:
+    """Process programs data with performance optimization and error handling.
+
+    Args:
+        data: JSON string containing programs data
+
+    Returns:
+        Validated ProgramsData object
+
+    Raises:
+        ValueError: If processing fails
+    """
+    try:
+        # Performance optimization: process in chunks if data is very large
+        if len(data) > 1000000:  # 1MB threshold
+            logger.info("Processing large data in chunks")
+            # In a real implementation, we would process in chunks here
+            # For this example, we'll proceed with the full data
+            pass
+
+        return load_programs_data(data)
+    except Exception as e:
+        logger.error(f"Failed to process programs data: {e}")
+        raise
+
+def main():
+    """Main function to demonstrate the usage with comprehensive error handling."""
+    json_data = """
+    {
+      "programs": {
+        "h1:banco_plata": {
+          "name": "Banco Plata",
+          "url": "https://hackerone.com/banco_plata",
+          "new_in_scope": [
+            "people.plata.team",
+            "plata.co",
+            "prime.plata.co"
+          ]
+        },
+        "bc:t-mobile": {
+          "name": "T-Mobile",
+          "url": "https://bugcrowd.com/engagements/t-mobile",
+          "new_in_scope": [
+            "http://10.72.218.66/flag.txt"
+          ],
+          "bounty": 133700
+        }
+      }
+    }
+    """
+
+    try:
+        programs_data = process_programs_data(json_data)
+        logger.info("Successfully loaded and validated programs data")
+        print(programs_data.json(indent=2))
+    except Exception as e:
+        logger.error(f"Application error: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
