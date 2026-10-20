@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "bounty-watch watchlist-change report. Instance document; additive-only changes vs schemaVersion 2.0.0. All timestamps are UTC ISO-8601 with millisecond precision; all URLs use https. Empty collections are always emitted explicitly (never omitted) and unknown values are explicit nulls so downstream consumers can distinguish 'unknown' from 'absent'.",
+  "schemaVersion": "2.1.0",
+  "version": "2.0.0",
+  "reportId": "bounty-watch:2026-10-19",
+  "generator": {
+    "name": "bounty-watch",
+    "version": "1.2.0",
+    "reportKind": "watchlist-change-report",
+    "reportDate": "2026-10-19",
+    "dateFormat": "ISO-8601",
+    "timezone": "UTC",
+    "dashboardUrl": "https://abdulsalam-create.github.io/bounty-watch/",
+    "repositoryUrl": null
+  },
+  "lastUpdated": "2026-10-19T00:00:00.000Z",
+  "summary": {
+    "totalPrograms": 3,
+    "totalScopes": 4,
+    "watchlistChanges": 4,
+    "programsWithDeployments": 2,
+    "bundlesAdded": 6,
+    "bundlesRemoved": 6,
+    "uniqueBundlesAdded": 3,
+    "uniqueBundlesRemoved": 3,
+    "resumedPrograms": 1,
+    "nonWatchlistScopeChanges": 6,
+    "scopesWithPendingChanges": 4,
+    "changesRequiringTriage": 4
+  },
+  ...
