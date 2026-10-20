@@ -1,0 +1,184 @@
+# yaml-language-server: $schema=./schema/bounty-programs.schema.json
+# -*- coding: utf-8 -*-
+---
+schema_version: "2.0.0"
+config_id: "bounty-watch/programs"
+revision: 2
+generated_at: "2026-10-20T00:00:00Z"
+owner: "@abdulsalam-create"
+
+metadata:
+  generator: "bounty-watch"
+  dashboard: "https://abdulsalam-create.github.io/bounty-watch/#inscope"
+  refresh_interval_seconds: 3600
+  diff_policy: "report_added_and_removed"
+  scope_checksum: "sha256:REPLACE_WITH_COMPUTED_DIGEST"
+  description: >
+    Machine-readable inventory of bug-bounty programs and their in-scope assets.
+    Every asset is validated against `validation` before being dispatched to a
+    hunter pipeline. Assets that cannot be proven safe are quarantined instead
+    of being silently scanned.
+
+# ---------------------------------------------------------------------------
+# Shared building blocks (anchors) — merge keys keep validation in ONE place.
+# ---------------------------------------------------------------------------
+.defaults: &defaults
+  platform: "unknown"
+  enabled: true
+  currency: "USD"
+  review_required: false
+  tags: []
+
+.logging: &logging
+  level: "INFO"                     # DEBUG | INFO | WARNING | ERROR | CRITICAL
+  format: "json"
+  destination: "stdout"             # stdout | file | syslog
+  include_timestamp: true
+  include_caller: false
+  redact_keys: ["authorization", "cookie", "set-cookie", "api_key", "token"]
+  events:
+    - "target.added"
+    - "target.removed"
+    - "target.changed"
+    - "validation.failed"
+    - "fetch.retry"
+    - "quarantine.triggered"
+
+.error_handling: &error_handling
+  on_validation_error: "quarantine"   # quarantine | skip | fail
+  on_fetch_error: "retry_then_skip"
+  fail_fast: false
+  retry:
+    max_attempts: 4
+    strategy: "exponential"
+    base_delay_ms: 500
+    max_delay_ms: 30000
+    jitter: true
+    retry_on: ["timeout", "connection_reset", "http_429", "http_5xx", "dns_temporary_failure"]
+    give_up_on: ["http_401", "http_403", "http_404", "schema_mismatch"]
+  dead_letter:
+    enabled: true
+    path: "./var/dead-letter/programs.jsonl"
+    max_bytes: 10485760
+
+.performance: &performance
+  concurrency: 8
+  per_program_concurrency: 2
+  request_timeout_ms: 15000
+  cache:
+    enabled: true
+    backend: "filesystem"
+    ttl_seconds: 1800
+    validators: ["etag", "last_modified"]
+  incremental_diff: true
+  stream_results: true
+
+.validation: &validation
+  strict: true
+  normalize_case: true
+  asset_rules:
+    domain:
+      pattern: '^(?=.{1,253}$)(?!-)[a-z0-9-]{1,63}(?<!-)(\.(?!-)[a-z0-9-]{1,63}(?<!-))+\.?$'
+      normalize: ["trim", "lowercase", "strip_trailing_dot", "idna_punycode"]
+      forbid_wildcards_unless_flagged: true
+    url:
+      pattern: '^https?://[^\s<>"]+$'
+      normalize: ["trim", "strip_fragment", "lowercase_scheme_and_host"]
+      max_length: 2048
+    ip_range:
+      format: "cidr"
+      normalize: ["trim"]
+  deny_hosts_cidr:                        # never auto-scan internal space
+    - "10.0.0.0/8"
+    - "172.16.0.0/12"
+    - "192.168.0.0/16"
+    - "127.0.0.0/8"
+    - "169.254.0.0/16"
+    - "::1/128"
+    - "fc00::/7"
+  deny_url_paths: ["/flag.txt", "/.env", "/.git/", "/wp-admin"]
+  deny_schemes: ["file", "gopher", "ftp", "dict", "ldap"]
+  max_targets_per_program: 500
+
+logging: *logging
+error_handling: *error_handling
+performance: *performance
+validation: *validation
+
+# ---------------------------------------------------------------------------
+# Programs
+# ---------------------------------------------------------------------------
+programs:
+  - id: "banco_plata"
+    name: "Banco Plata"
+    platform: "hackerone"
+    url: "https://hackerone.com/banco_plata"
+    enabled: true
+    review_required: false
+    bounty_total_usd: null
+    last_checked_at: "2026-10-20T00:00:00Z"
+    tags: ["fintech", "latam"]
+    in_scope:
+      - asset: "people.plata.team"
+        type: "domain"
+        status: "active"
+        added_at: "2026-10-20"
+        review_required: false
+      - asset: "plata.co"
+        type: "domain"
+        status: "active"
+        added_at: "2026-10-20"
+        review_required: false
+        include_subdomains: true
+      - asset: "prime.plata.co"
+        type: "domain"
+        status: "active"
+        added_at: "2026-10-20"
+        review_required: false
+    out_of_scope: []
+    notes: >
+      All three assets are newly in scope as of 2026-10-20. Re-verify the
+      program brief before submitting; scope on HackerOne outweighs this file.
+
+  - id: "t-mobile"
+    name: "T-Mobile"
+    platform: "bugcrowd"
+    url: "https://bugcrowd.com/engagements/t-mobile"
+    enabled: true
+    review_required: true
+    bounty_total_usd: 133700
+    last_checked_at: "2026-10-20T00:00:00Z"
+    tags: ["telecom", "high-payout"]
+    in_scope:
+      - asset: "http://10.72.218.66/flag.txt"
+        type: "url"
+        status: "quarantined"
+        added_at: "2026-10-20"
+        review_required: true
+        risk: "critical"
+        quarantined_by: "validation.deny_hosts_cidr"
+        reason: >
+          Host 10.72.218.66 is RFC1918 private space and the path "/flag.txt" is a
+          textbook CTF / SSRF canary. This target is not reachable from the public
+          internet. Do NOT scan, fetch or submit requests against it until a human
+          confirms the engagement rules; a scraped-scope parser may have ingested a
+          planted entry.
+    out_of_scope: []
+    notes: >
+      Program carries the largest observed bounty pool in this snapshot. Treat the
+      single new in-scope entry as untrusted input pending manual triage.
+
+# ---------------------------------------------------------------------------
+# Machine-checkable contract for CI (opt-in; safe to delete if unused).
+# ---------------------------------------------------------------------------
+json_schema_ref: "./schema/bounty-programs.schema.json"
+ci_gates:
+  - id: "no_quarantined_assets_in_production"
+    severity: "error"
+    applies_to: "env:production"
+  - id: "all_domains_match_validation_asset_rules_domain"
+    severity: "error"
+  - id: "no_denied_cidr_in_active_scope"
+    severity: "error"
+  - id: "scope_checksum_present"
+    severity: "warning"
