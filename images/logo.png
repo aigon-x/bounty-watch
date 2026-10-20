@@ -1,0 +1,169 @@
+from PIL import Image, ImageDraw, ImageFont
+import textwrap
+import logging
+from typing import Tuple, Optional
+import os
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('logo_creator.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+class LogoCreator:
+    """
+    A class to create bounty watch logos with scope change information.
+
+    Attributes:
+        width (int): Width of the logo image in pixels.
+        height (int): Height of the logo image in pixels.
+        background_color (str): Background color of the logo.
+        font_path (str): Path to the font file to use.
+    """
+
+    def __init__(self, width: int = 800, height: int = 400, background_color: str = 'white', font_path: str = "arial.ttf"):
+        """
+        Initialize the LogoCreator with default or specified parameters.
+
+        Args:
+            width: Width of the logo image in pixels.
+            height: Height of the logo image in pixels.
+            background_color: Background color of the logo.
+            font_path: Path to the font file to use.
+        """
+        self.width = width
+        self.height = height
+        self.background_color = background_color
+        self.font_path = font_path
+        self._validate_inputs()
+
+    def _validate_inputs(self) -> None:
+        """Validate all input parameters."""
+        if not isinstance(self.width, int) or self.width <= 0:
+            raise ValueError("Width must be a positive integer")
+        if not isinstance(self.height, int) or self.height <= 0:
+            raise ValueError("Height must be a positive integer")
+        if not isinstance(self.background_color, str):
+            raise ValueError("Background color must be a string")
+        if not isinstance(self.font_path, str):
+            raise ValueError("Font path must be a string")
+
+        # Check if font file exists
+        if not os.path.exists(self.font_path):
+            logger.warning(f"Font file not found at {self.font_path}. Using default font.")
+            self.font_path = None
+
+    def _get_font(self, size: int) -> ImageFont.FreeTypeFont:
+        """
+        Get a font of the specified size.
+
+        Args:
+            size: Size of the font in points.
+
+        Returns:
+            ImageFont.FreeTypeFont: The font object.
+        """
+        try:
+            if self.font_path:
+                return ImageFont.truetype(self.font_path, size)
+            return ImageFont.load_default()
+        except Exception as e:
+            logger.error(f"Error loading font: {e}")
+            raise
+
+    def create_logo(self, title: str, subtitle: str, date: str, summary: str, output_path: str = "images/logo.png") -> None:
+        """
+        Create a logo with the specified text elements.
+
+        Args:
+            title: Main title text.
+            subtitle: Subtitle text.
+            date: Date text.
+            summary: Summary text.
+            output_path: Path to save the output image.
+
+        Raises:
+            ValueError: If any input validation fails.
+            IOError: If there's an issue saving the image.
+        """
+        try:
+            # Validate inputs
+            if not all(isinstance(x, str) for x in [title, subtitle, date, summary, output_path]):
+                raise ValueError("All text inputs must be strings")
+            if not output_path.lower().endswith('.png'):
+                raise ValueError("Output path must have a .png extension")
+
+            # Create directory if it doesn't exist
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+            # Create a new image with white background
+            image = Image.new('RGB', (self.width, self.height), self.background_color)
+            draw = ImageDraw.Draw(image)
+
+            # Load fonts
+            font_large = self._get_font(72)
+            font_medium = self._get_font(48)
+            font_small = self._get_font(36)
+
+            # Calculate positions and draw text
+            self._draw_centered_text(draw, title, font_large, y_position=50)
+            self._draw_centered_text(draw, subtitle, font_medium, y_position=150)
+            self._draw_centered_text(draw, date, font_small, y_position=220)
+            self._draw_centered_text(draw, summary, font_small, y_position=280)
+
+            # Save the image
+            image.save(output_path)
+            logger.info(f"Logo successfully created and saved to {output_path}")
+
+        except Exception as e:
+            logger.error(f"Error creating logo: {e}")
+            raise
+
+    def _draw_centered_text(self, draw: ImageDraw.Draw, text: str, font: ImageFont.FreeTypeFont, y_position: int) -> None:
+        """
+        Draw centered text on the image.
+
+        Args:
+            draw: ImageDraw object.
+            text: Text to draw.
+            font: Font to use.
+            y_position: Y position for the text.
+        """
+        try:
+            text_width = draw.textlength(text, font=font)
+            draw.text(
+                ((self.width - text_width) / 2, y_position),
+                text,
+                fill='black',
+                font=font
+            )
+        except Exception as e:
+            logger.error(f"Error drawing text: {e}")
+            raise
+
+def main() -> None:
+    """Main function to create the logo."""
+    try:
+        # Create logo creator instance
+        logo_creator = LogoCreator()
+
+        # Create the logo
+        logo_creator.create_logo(
+            title="Bounty Watch",
+            subtitle="Scope Change Digest",
+            date="2026-10-20",
+            summary="5 scope change(s) across 4 bug bounty program(s)",
+            output_path="images/logo.png"
+        )
+
+    except Exception as e:
+        logger.critical(f"Failed to create logo: {e}")
+        raise
+
+if __name__ == "__main__":
+    main()
