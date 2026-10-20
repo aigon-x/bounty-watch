@@ -1,0 +1,47 @@
+from PIL import Image, ImageDraw, ImageFont
+import os
+
+def create_dashboard_background(width=1920, height=1080, output_path="images/background.jpg"):
+    # Create a new image with a dark background
+    image = Image.new('RGB', (width, height), color='#1a1a2e')
+    draw = ImageDraw.Draw(image)
+
+    # Create a gradient overlay
+    for y in range(height):
+        # Calculate gradient color (darker at top, lighter at bottom)
+        gradient_color = int(30 + (y / height) * 20)
+        draw.line([(0, y), (width, y)], fill=(gradient_color, gradient_color, gradient_color + 10))
+
+    # Add subtle grid lines
+    grid_color = '#2d2d44'
+    for x in range(0, width, 50):
+        draw.line([(x, 0), (x, height)], fill=grid_color, width=1)
+    for y in range(0, height, 50):
+        draw.line([(0, y), (width, y)], fill=grid_color, width=1)
+
+    # Add dashboard title
+    try:
+        font = ImageFont.truetype("arial.ttf", 48)
+    except IOError:
+        font = ImageFont.load_default()
+
+    draw.text((width//2 - 150, 50), "Bug Bounty Scope Dashboard", fill='#e94560', font=font)
+
+    # Add date information
+    try:
+        font_small = ImageFont.truetype("arial.ttf", 24)
+    except IOError:
+        font_small = ImageFont.load_default()
+
+    draw.text((width - 300, 30), "Daily Digest 2026-10-20", fill='#bbbbbb', font=font_small)
+
+    # Create a directory if it doesn't exist
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+    # Save the image
+    image.save(output_path, quality=95)
+
+    print(f"Dashboard background created and saved to {output_path}")
+
+# Create the background image
+create_dashboard_background()
